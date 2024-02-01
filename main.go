@@ -9,7 +9,6 @@ import (
 	"math/rand"
 	"os"
 	"time"
-
 	ctrl "sigs.k8s.io/controller-runtime"
 
 	"github.com/Azure/aks-app-routing-operator/pkg/config"
