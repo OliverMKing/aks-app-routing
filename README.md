@@ -2,7 +2,7 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/Azure/aks-app-routing-operator/badge.svg?branch=main)](https://coveralls.io/github/Azure/aks-app-routing-operator?branch=main)
 
-A Kubernetes operator that manages resources related to AKS Application Routing functionality.
+A Kubernetes operator that manages resources related to AKS Application Routing functionality. 2
 
 ## Docs
 
