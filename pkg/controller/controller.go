@@ -11,6 +11,7 @@ import (
 	approutingv1alpha1 "github.com/Azure/aks-app-routing-operator/api/v1alpha1"
 	"github.com/Azure/aks-app-routing-operator/pkg/controller/nginxingress"
 	"github.com/Azure/aks-app-routing-operator/pkg/controller/service"
+	"github.com/Azure/aks-app-routing-operator/pkg/util"
 	"github.com/go-logr/logr"
 	cfgv1alpha2 "github.com/openservicemesh/osm/pkg/apis/config/v1alpha2"
 	policyv1alpha1 "github.com/openservicemesh/osm/pkg/apis/policy/v1alpha1"
@@ -25,6 +26,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/util/retry"
 	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -108,7 +110,7 @@ func NewManagerForRestConfig(conf *config.Config, rc *rest.Config) (ctrl.Manager
 		return nil, fmt.Errorf("creating non-caching client: %w", err)
 	}
 
-	if err := loadCRDs(cl, conf, setupLog); err != nil {
+	if err := retry.OnError(retry.DefaultRetry, util.IsRetriableK8sErr, func() error { return loadCRDs(cl, conf, setupLog) }); err != nil {
 		setupLog.Error(err, "failed to load CRDs")
 		return nil, fmt.Errorf("loading CRDs: %w", err)
 	}

@@ -101,3 +101,13 @@ func FilterMap[K comparable, V comparable](m map[K]V, keep func(K, V) bool) map[
 
 	return new
 }
+
+// IsRetriableK8sErr returns whether the error is retriable due to api server starting up. The controller runtime client has some retries built in
+func IsRetriableK8sErr(err error) bool {
+	// connection refused
+	if errors.IsForbidden(err) {
+		return true
+	}
+
+	return false
+}

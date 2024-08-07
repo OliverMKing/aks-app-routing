@@ -51,6 +51,7 @@ func loadCRDs(c client.Client, cfg *config.Config, log logr.Logger) error {
 
 		log.Info("upserting crd")
 		if err := util.Upsert(context.Background(), c, crd); err != nil {
+			log.Error(err, "upserting crd failed") // we log this here instead of up the stack because we sometimes retry client errors if we think it's because api server isn't up yet
 			return fmt.Errorf("upserting crd %s: %w", crd.Name, err)
 		}
 	}
